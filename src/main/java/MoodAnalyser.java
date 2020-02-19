@@ -7,16 +7,16 @@ public class MoodAnalyser {
     public MoodAnalyser(String moodMessage) {
         this.moodMessage=moodMessage;
     }
-    public String testHappy(String moodMessage) throws MoodAnalyserException {
+    public String testHappy() throws MoodAnalyserException {
         try {
             if (moodMessage.isEmpty())
-                throw new MoodAnalyserException("This is Empty");
+                throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.IS_EMPTY,"This is Empty");
             if (moodMessage.contains("happy"))
                 return "Happy";
                 return "Sad";
         }
         catch(NullPointerException np) {
-            throw new MoodAnalyserException("This is invalid mood");
+            throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.IS_NULL,"This is invalid mood");
         }
     }
 }
