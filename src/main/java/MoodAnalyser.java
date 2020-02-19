@@ -1,6 +1,12 @@
 import com.bridgelabz.exception.MoodAnalyserException;
 
 public class MoodAnalyser {
+    private String moodMessage;
+    public MoodAnalyser() {
+    }
+    public MoodAnalyser(String moodMessage) {
+        this.moodMessage=moodMessage;
+    }
     public String testHappy(String moodMessage) throws MoodAnalyserException {
         try {
             if (moodMessage.isEmpty())
