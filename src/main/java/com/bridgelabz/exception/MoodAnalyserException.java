@@ -2,8 +2,18 @@ package com.bridgelabz.exception;
 
 public class MoodAnalyserException extends RuntimeException {
 
+    public MoodAnalyserException(ExceptionType type,Throwable cause) {
+        super(cause);
+        this.type = type;
+    }
+
+    public MoodAnalyserException(ExceptionType type,String message, Throwable cause) {
+        super(message, cause);
+        this.type = type;
+    }
+
     public enum ExceptionType{
-        IS_EMPTY,IS_NULL
+        IS_EMPTY,NO_ARGUMENT,IS_NULL,NO_SUCH_CLASS,NO_SUCH_METHOD,ILLEGAL_ACCESS,INSATANTIATION_EXCEPTION,INVOCATION_TARGET_EXCEPTION;
     }
     public ExceptionType type;
 
