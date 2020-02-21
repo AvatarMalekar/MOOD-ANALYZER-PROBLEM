@@ -58,4 +58,16 @@ public class MoodAnalyzerFactory {
         }
         return result;
     }
+
+    public static Object getInvokeMethod(Object constructorObject, String i_am_in_happy_mood) {
+        try {
+            return constructorObject.getClass().getMethod(i_am_in_happy_mood).invoke(constructorObject);
+        } catch (NoSuchMethodException e) {
+            throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.NO_SUCH_METHOD,e.getMessage());
+        } catch (IllegalAccessException e) {
+            throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.ILLEGAL_ACCESS,e);
+        } catch (InvocationTargetException e) {
+            throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.INVOCATION_TARGET_EXCEPTION,e.getMessage());
+        }
+    }
 }
