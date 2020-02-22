@@ -1,6 +1,7 @@
 import com.bridgelabz.exception.MoodAnalyserException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.MalformedParameterizedTypeException;
 
@@ -52,8 +53,7 @@ public class MoodAnalyzerFactory {
             result = constructor;
         } catch (ClassNotFoundException e) {
             throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.NO_SUCH_CLASS,e.getMessage());
-        }
-        catch (NoSuchMethodException e){
+        } catch (NoSuchMethodException e){
             throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.NO_SUCH_METHOD,e.getMessage());
         }
         return result;
@@ -69,5 +69,23 @@ public class MoodAnalyzerFactory {
         } catch (InvocationTargetException e) {
             throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.INVOCATION_TARGET_EXCEPTION,e.getMessage());
         }
+    }
+
+    public static String setFieldValue(MoodAnalyser moodObject, String message, String fieldName) {
+        try {
+            Field field = moodObject.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(moodObject, message);
+            return (String) moodObject.getClass().getDeclaredMethod("testHappy").invoke(moodObject);
+        } catch (NoSuchFieldException e) {
+            throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.NO_SUCH_FIELD,e.getMessage());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            throw new MoodAnalyserException(MoodAnalyserException.ExceptionType.FIELD_INVOCATION_ISSUE,e.getMessage());
+        }
+      return null;
     }
 }

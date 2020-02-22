@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class MoodAnalyserTest {
 
@@ -57,7 +56,7 @@ public class MoodAnalyserTest {
     }
 
     @Test
-    public void givenMoodAnalyzer_whenProper_shouldReturnObject() throws ClassNotFoundException {
+    public void givenMoodAnalyzer_whenProper_shouldReturnObject() {
         Constructor<?> constructor=null;
         Object object;
         try {
@@ -73,6 +72,8 @@ public class MoodAnalyserTest {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -102,7 +103,7 @@ public class MoodAnalyserTest {
     @Test
     public void givenClassName_whenImproper_shouldReturn_Exception() {
         try {
-            MoodAnalyzerFactory.getConstructor("Mood",Integer.class);
+            MoodAnalyzerFactory.getConstructor("Mood",String.class);
         }catch(MoodAnalyserException e){
             Assert.assertEquals(MoodAnalyserException.ExceptionType.NO_SUCH_CLASS,e.type);
         }
@@ -121,8 +122,8 @@ public class MoodAnalyserTest {
     public void givenHappy_whenProper_ShouldReturnHappy_byInvokingTheMethod() {
         Object moodObject = null;
         try {
-            Class<?> claasObj=Class.forName("MoodAnalyser");
-            Constructor<?> myConstructor=claasObj.getConstructor(String.class);
+            Class<?> classObj=Class.forName("MoodAnalyser");
+            Constructor<?> myConstructor=classObj.getConstructor(String.class);
             Object ConstructorObject=myConstructor.newInstance("I am in happy mood");
             moodObject=MoodAnalyzerFactory.getInvokeMethod(ConstructorObject,"testHappy");
             Assert.assertEquals("Happy",moodObject);
@@ -137,14 +138,13 @@ public class MoodAnalyserTest {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
     }
 
     @Test
     public void givenHappy_whenImproper_ShouldReturnException_byInvokingTheMethod() {
         try {
-            Class<?> claasObj=Class.forName("MoodAnalyser");
-            Constructor<?> myConstructor=claasObj.getConstructor(String.class);
+            Class<?> classObj=Class.forName("MoodAnalyser");
+            Constructor<?> myConstructor=classObj.getConstructor(String.class);
             Object ConstructorObject=myConstructor.newInstance("I am in happy mood");
             Object moodObject=MoodAnalyzerFactory.getInvokeMethod(ConstructorObject,"stHappy");
         } catch (MoodAnalyserException e) {
@@ -159,6 +159,33 @@ public class MoodAnalyserTest {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenHappy_whenProper_shouldReturnHappy_bySettingField() {
+        MoodAnalyser moodObject = MoodAnalyzerFactory.createMoodAnalyzer2();
+        String mood = MoodAnalyzerFactory.setFieldValue(moodObject,"I am in happy mood","moodMessage");
+        Assert.assertEquals("Happy", mood);
+    }
+
+    @Test
+    public void givenField_whenNotProper_shouldReturnException() {
+        try {
+            MoodAnalyser moodObject = MoodAnalyzerFactory.createMoodAnalyzer2();
+            String mood = MoodAnalyzerFactory.setFieldValue(moodObject, "I am in happy mood", "moMessage");
+        } catch(MoodAnalyserException e){
+            Assert.assertEquals(MoodAnalyserException.ExceptionType.NO_SUCH_FIELD,e.type);
+        }
+    }
+
+    @Test
+    public void givenFieldMessage_whenNull_shouldReturnException() {
+        try {
+            MoodAnalyser moodObject = MoodAnalyzerFactory.createMoodAnalyzer2();
+            String mood = MoodAnalyzerFactory.setFieldValue(moodObject, null, "moodMessage");
+        } catch(MoodAnalyserException e){
+            Assert.assertEquals(MoodAnalyserException.ExceptionType.FIELD_INVOCATION_ISSUE,e.type);
         }
     }
 
